@@ -1,8 +1,8 @@
 import jax
 import jax.numpy as jnp
 from functools import partial
-from solver import PDESolver
-from utils import interpolate_fn, add_time_fn
+from .solver import PDESolver
+from .utils import interpolate_fn, add_time_fn
 
 
 class SigKernel():
