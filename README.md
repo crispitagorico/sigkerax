@@ -40,8 +40,6 @@ second_batch_paths = jax.random.normal(key2, shape=(batch_dim2, length2, channel
 sigker_matrix = signature_kernel.kernel_matrix(first_batch_paths, second_batch_paths)
 ```
 
-## Signatures in JAX
-
-### See also: other signature libraries in the JAX ecosystem
+## Other signature linraries in JAX
 
 [Signax](https://github.com/Anh-Tong/signax): signatures.
