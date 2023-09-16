@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Release
-        uses: crispitagorico/action_update_python_project@v2
+        uses: actions/setup-python@v2
         with:
             python-version: "3.9"
             test-script: |
