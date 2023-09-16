@@ -4,7 +4,6 @@ Sigkerax is a [JAX](https://github.com/google/jax) library for [signature kernel
 
 [![PyPI Version][pypi-image]][pypi-url]
 [![Build Status][build-image]][build-url]
-[![][stars-image]][stars-url]
 [![][versions-image]][versions-url]
 
 ...
@@ -13,8 +12,8 @@ Sigkerax is a [JAX](https://github.com/google/jax) library for [signature kernel
 
 [pypi-image]: https://img.shields.io/pypi/v/sigkerax
 [pypi-url]: https://pypi.org/project/sigkerax/
-[build-image]: https://github.com/mathspp/extendedjson/actions/workflows/build.yaml/badge.svg
-[build-url]: https://github.com/mathspp/extendedjson/actions/workflows/build.yaml
+[build-image]: https://github.com/crispitagorico/sigkerax/actions/workflows/build.yaml/badge.svg
+[build-url]: https://github.com/crispitagorico/sigkerax/actions/workflows/build.yaml
 [coverage-image]: https://codecov.io/gh/mathspp/extendedjson/branch/main/graph/badge.svg
 [coverage-url]: https://codecov.io/gh/mathspp/sigkerax/
 [stars-image]: https://img.shields.io/github/stars/mathspp/sigkerax/
