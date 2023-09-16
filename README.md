@@ -16,7 +16,7 @@ Requires Python 3.8+, JAX 0.4.11+.
 
 ## Documentation
 
-Available at [https://docs.kidger.site/lineax](https://docs.kidger.site/lineax).
+Coming soon...
 
 ## Quick examples
 
