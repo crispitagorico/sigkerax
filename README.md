@@ -18,7 +18,7 @@ Requires Python 3.8+, JAX 0.4.11+.
 
 Coming soon...
 
-## Quick examples
+## Quick example
 
 Lineax can solve a least squares problem with an explicit matrix operator:
 
@@ -39,6 +39,8 @@ first_batch_paths = jax.random.normal(key1, shape=(batch_dim1, length1, channels
 second_batch_paths = jax.random.normal(key2, shape=(batch_dim2, length2, channels)).cumsum(axis=1)
 sigker_matrix = signature_kernel.kernel_matrix(first_batch_paths, second_batch_paths)
 ```
+
+## Signatures in JAX
 
 ### See also: other signature libraries in the JAX ecosystem
 
