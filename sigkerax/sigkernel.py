@@ -5,7 +5,7 @@ from .solver import PDESolver
 from .utils import interpolate_fn, add_time_fn
 
 
-class SigKernel():
+class SigKernel:
   def __init__(self,
                pde_solver: PDESolver,
                s0: float = 0.,
