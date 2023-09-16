@@ -4,7 +4,6 @@ Sigkerax is a [JAX](https://github.com/google/jax) library for [signature kernel
 
 [![PyPI Version][pypi-image]][pypi-url]
 [![Build Status][build-image]][build-url]
-[![Code Coverage][coverage-image]][coverage-url]
 [![][stars-image]][stars-url]
 [![][versions-image]][versions-url]
 
