@@ -1,28 +1,6 @@
 <h1 align='center'>Sigkerax</h1>
 
-Sigkerax is a [JAX](https://github.com/google/jax) library for [signature kernels](https://arxiv.org/pdf/2006.14794.pdf). 
-
-[![PyPI Version][pypi-image]][pypi-url]
-[![Build Status][build-image]][build-url]
-[![][versions-image]][versions-url]
-
-...
-
-<!-- Badges: -->
-
-[pypi-image]: https://img.shields.io/pypi/v/sigkerax
-[pypi-url]: https://pypi.org/project/sigkerax/
-[build-image]: https://github.com/crispitagorico/sigkerax/actions/workflows/build.yaml/badge.svg
-[build-url]: https://github.com/crispitagorico/sigkerax/actions/workflows/build.yaml
-[coverage-image]: https://codecov.io/gh/mathspp/extendedjson/branch/main/graph/badge.svg
-[coverage-url]: https://codecov.io/gh/mathspp/sigkerax/
-[stars-image]: https://img.shields.io/github/stars/mathspp/sigkerax/
-[stars-url]: https://github.com/mathspp/sigkerax
-[versions-image]: https://img.shields.io/pypi/pyversions/sigkerax/
-[versions-url]: https://pypi.org/project/sigkerax/
-
-
-Features include:
+Sigkerax is a [JAX](https://github.com/google/jax) library for [signature kernels](https://arxiv.org/pdf/2006.14794.pdf). Features include:
 - Custom static kernels (at time of writing only linear and RBF kernels are implemented);
 - All the benefits of working with JAX: autodiff, autoparallelism, GPU/TPU support etc.
 
