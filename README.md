@@ -30,9 +30,8 @@ from sigkerax.solver import FiniteDifferenceSolver
 from sigkerax.sigkernel import SigKernel
 
 static_kernel = lambda x, y: linear_kernel(x, y, scale=1.0)
-pde_solver = FiniteDifferenceSolver(static_kernel=static_kernel, multi_gpu=False)
-signature_kernel = SigKernel(pde_solver=pde_solver, s0=0.0, t0=0.0, S=1.0, T=1.0, ds=1e-3, dt=1e-3,
-                             add_time=False, interpolation="linear")
+pde_solver = FiniteDifferenceSolver(static_kernel=static_kernel)
+signature_kernel = SigKernel(pde_solver=pde_solver, ds=1e-3, dt=1e-3, add_time=False)
 
 batch_dim1, batch_dim2, length1, length2, channels = 20, 50, 100, 200, 10
 key1, key2 = jax.random.split(jax.random.PRNGKey(0))
