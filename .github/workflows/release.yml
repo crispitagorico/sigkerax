@@ -1,37 +1,4 @@
-#name: Publish to PyPI
-#
-#on:
-#  push:
-#    branches:
-#      - main
-#
-#jobs:
-#  build-and-publish:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout sources
-#        uses: actions/checkout@v2
-#
-#      - name: Setup Python
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: "3.9"
-#
-#      - name: Install poetry and dependencies
-#        run: |
-#          python -m pip install --upgrade pip
-#          python -m pip install poetry
-#
-#      - name: Configure poetry
-#        env:
-#          pypi_token: ${{ secrets.PyPI_TOKEN }}
-#        run: poetry config pypi-token.pypi $pypi_token
-#
-#      - name: Build and publish
-#        run: poetry publish --build
-
-name: Release
+name: Publish to PyPI
 
 on:
   push:
@@ -39,22 +6,55 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-publish:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Release
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
-            python-version: "3.9"
-            test-script: |
-                cp -r ${{ github.workspace }}/tests ./tests
-                cp ${{ github.workspace }}/pyproject.toml ./pyproject.toml
-                python -m pip install -r ./tests/requirements.txt
-                pytest
-            pypi-token: ${{ secrets.pypi_token }}
-            github-user: crispitagorico
-            github-token: ${{ github.token }}
-            email-user: ${{ secrets.email_user }}
-            email-token: ${{ secrets.email_token }}
-            email-server: ${{ secrets.email_server }}
-            email-target: ${{ secrets.email_target }}
+          python-version: "3.9"
+
+      - name: Install poetry and dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+
+      - name: Configure poetry
+        env:
+          pypi_token: ${{ secrets.PyPI_TOKEN }}
+        run: poetry config pypi-token.pypi $pypi_token
+
+      - name: Build and publish
+        run: poetry publish --build
+
+#name: Release
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Release
+#        uses: actions/setup-python@v2
+#        with:
+#            python-version: "3.9"
+#            test-script: |
+#                cp -r ${{ github.workspace }}/tests ./tests
+#                cp ${{ github.workspace }}/pyproject.toml ./pyproject.toml
+#                python -m pip install -r ./tests/requirements.txt
+#                pytest
+#            pypi-token: ${{ secrets.pypi_token }}
+#            github-user: crispitagorico
+#            github-token: ${{ github.token }}
+#            email-user: ${{ secrets.email_user }}
+#            email-token: ${{ secrets.email_token }}
+#            email-server: ${{ secrets.email_server }}
+#            email-target: ${{ secrets.email_target }}
