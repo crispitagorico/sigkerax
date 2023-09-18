@@ -6,26 +6,35 @@ from .utils import interpolate_fn, add_time_fn
 
 
 class SigKernel:
-  def __init__(self,
-               pde_solver: PDESolver,
-               s0: float = 0.,
-               t0: float = 0.,
-               S: float = 1.,
-               T: float = 1.,
-               ds: float = 1e-1,
-               dt: float = 1e-1,
-               add_time: bool = False,
-               interpolation: str = "linear"):
-
-    self.s0 = s0
-    self.t0 = t0
-    self.S = S
-    self.T = T
-    self.ds = ds
-    self.dt = dt
-    self.pde_solver = pde_solver
-    self.add_time = add_time
-    self.interpolation = interpolation
+  pde_solver: PDESolver
+  s0: float = 0.
+  t0: float = 0.
+  S: float = 1.
+  T: float = 1.
+  ds: float = 1e-2
+  dt: float = 1e-2
+  add_time: bool = False
+  interpolation: str = "linear"
+  # def __init__(self,
+  #              pde_solver: PDESolver,
+  #              s0: float = 0.,
+  #              t0: float = 0.,
+  #              S: float = 1.,
+  #              T: float = 1.,
+  #              ds: float = 1e-1,
+  #              dt: float = 1e-1,
+  #              add_time: bool = False,
+  #              interpolation: str = "linear"):
+  #
+  #   self.s0 = s0
+  #   self.t0 = t0
+  #   self.S = S
+  #   self.T = T
+  #   self.ds = ds
+  #   self.dt = dt
+  #   self.pde_solver = pde_solver
+  #   self.add_time = add_time
+  #   self.interpolation = interpolation
 
   @partial(jax.jit, static_argnums=0)
   def kernel_matrix(self, X: jnp.ndarray, Y: jnp.ndarray) -> jnp.ndarray:
