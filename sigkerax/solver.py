@@ -18,19 +18,25 @@ class FiniteDifferenceSolver(PDESolver):
     self.multi_gpu = multi_gpu
 
   @partial(jax.jit, static_argnums=(0, 2))
-  def _static_kernel_diag_update(self,
-                                 diag_axis:  jnp.ndarray,
-                                 diag_index: int,
-                                 X:          jnp.ndarray,
-                                 Y:          jnp.ndarray
-                                 ) -> jnp.ndarray:
+  def _static_kernel_diag_update(self, diag_axis: jnp.ndarray, diag_index: int, X: jnp.ndarray, Y: jnp.ndarray) -> jnp.ndarray:
+    """
+    This function computes k_static(X[i,k], Y[j,k]), for k in 'diag_axis', where k_static is the chosen static kernel.
+    The updated diagonal is determined by a conditional check on each element of the `diag_axis` array; if an element
+    in this array is not equal to -1, the static kernel value is returned; otherwise, the value is set to 0.0.
 
-    def _static_kernel_single_update(i: int, j: int, k: int) -> float:
-      return jnp.where(k != -1, self.static_kernel(X[i, k], Y[j, diag_index - k]), 0.0)
+    Inputs:
+    - diag_axis (jnp.ndarray): Indexing array for static kernel diagonal update. Values -1 indicate positions set to 0.
+                               Shape: (length_X,).
+    - diag_index (int): An index offset to adjust the position within Y when computing the static kernel value.
+    - X (jnp.ndarray): First input paths tensor. Shape: (batch_X, length_X, channel).
+    - Y (jnp.ndarray): Second input paths tensor. Shape: (batch_Y, length_Y, channel).
 
+    Outputs:
+    - jnp.ndarray: The updated diagonal of the static kernel evaluations. Shape: (batch_X, batch_Y, length_X).
+    """
     return jax.vmap(
                     jax.vmap(
-                             jax.vmap(_static_kernel_single_update,
+                             jax.vmap(lambda i, j, k: jnp.where(k != -1, self.static_kernel(X[i, k], Y[j, diag_index - k]), 0.0),
                              in_axes=(None, None, 0)),
                     in_axes=(None, 0, None)),
             in_axes=(0, None, None)

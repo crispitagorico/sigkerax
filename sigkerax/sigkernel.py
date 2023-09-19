@@ -31,3 +31,13 @@ class SigKernel:
       Y = add_time_fn(Y, t_min=self.t0, t_max=self.T)
 
     return self.pde_solver.solve(X, Y)
+
+  @partial(jax.jit, static_argnums=0)
+  def kernel_matrix_and_derivatives(self, X: jnp.ndarray, directions: jnp.ndarray, Y: jnp.ndarray):
+    X = interpolate_fn(X, t_min=self.s0, t_max=self.S, step=self.ds, kind=self.interpolation)
+    Y = interpolate_fn(Y, t_min=self.t0, t_max=self.T, step=self.dt, kind=self.interpolation)
+    directions = interpolate_fn(directions, t_min=self.s0, t_max=self.S, step=self.ds, kind=self.interpolation)
+    if self.add_time:
+      X = add_time_fn(X, t_min=self.s0, t_max=self.S)
+      Y = add_time_fn(Y, t_min=self.t0, t_max=self.T)
+      directions = add_time_fn(directions, t_min=self.s0, t_max=self.S)
