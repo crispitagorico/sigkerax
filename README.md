@@ -22,20 +22,14 @@ Lineax can solve a least squares problem with an explicit matrix operator:
 
 ```python
 import jax
-import jax.numpy as jnp
-from sigkerax.static_kernels import linear_kernel
-from sigkerax.solver import FiniteDifferenceSolver
 from sigkerax.sigkernel import SigKernel
 
-static_kernel = lambda x, y: linear_kernel(x, y, scale=1.0)
-pde_solver = FiniteDifferenceSolver(static_kernel=static_kernel)
-signature_kernel = SigKernel(pde_solver=pde_solver, ds=1e-3, dt=1e-3, add_time=False)
-
+signature_kernel = SigKernel(ds=1e-3, dt=1e-3, static_kernel_kind="linear", scale=1e-1, add_time=False)
 batch_dim1, batch_dim2, length1, length2, channels = 20, 50, 100, 200, 10
 key1, key2 = jax.random.split(jax.random.PRNGKey(0))
 first_batch_paths = jax.random.normal(key1, shape=(batch_dim1, length1, channels)).cumsum(axis=1)
 second_batch_paths = jax.random.normal(key2, shape=(batch_dim2, length2, channels)).cumsum(axis=1)
-sigker_matrix = signature_kernel.kernel_matrix(first_batch_paths, second_batch_paths)
+signature_kernel_matrix = signature_kernel.kernel_matrix(first_batch_paths, second_batch_paths)
 ```
 
 ## Other signature libraries in JAX
