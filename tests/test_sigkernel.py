@@ -22,8 +22,9 @@ class TestSigKernel:
 
   def test_padded_path(self):
     """Padding with lastly observed value doesn't change the inner product."""
+    length_to_pad = 10
     X = 1e-1*jax.random.normal(getkey(), shape=(self.batch_X, self.length_X, self.dim), dtype=self.dtype)
-    X_pad = jnp.concatenate([X, jnp.tile(X[:, -1:, :], (1, 5, 1))], axis=1)
+    X_pad = jnp.concatenate([X, jnp.tile(X[:, -1:, :], (1, length_to_pad, 1))], axis=1)
     Y = 1e-1*jax.random.normal(getkey(), shape=(self.batch_Y, self.length_Y, self.dim), dtype=self.dtype)
     k_mat = self.signature_kernel.kernel_matrix(X, Y)
     k_mat_pad = self.signature_kernel.kernel_matrix(X_pad, Y)
