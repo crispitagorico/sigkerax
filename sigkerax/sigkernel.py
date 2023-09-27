@@ -6,14 +6,11 @@ from .utils import interpolate_fn, add_time_fn
 
 
 class SigKernel:
-  def __init__(self, static_kernel_kind: str = 'linear', scale: float = 1e0,
+  def __init__(self, static_kernel_kind: str = 'linear', scales: jnp.ndarray = jnp.array([1e0]),
                s0: float = 0., t0: float = 0., S: float = 1., T: float = 1., ds: float = 1e-1, dt: float = 1e-1,
-               pde_solver_type: str = 'finite-difference', add_time: bool = False, interpolation: str = "linear"):
+               add_time: bool = False, interpolation: str = "linear"):
     if static_kernel_kind not in ["linear", "rbf"]:
       raise ValueError("Only linear and rbf static_kernels are implemented for now.")
-    if pde_solver_type not in ["finite-difference"]:
-      raise ValueError("Only finite-difference scheme is implemented for now.")
-    self.pde_solver = FiniteDifferenceSolver(static_kernel_kind=static_kernel_kind, scale=scale)
     self.s0 = s0
     self.t0 = t0
     self.S = S
@@ -22,6 +19,8 @@ class SigKernel:
     self.dt = dt
     self.add_time = add_time
     self.interpolation = interpolation
+    self.scales = scales
+    self.pde_solver = FiniteDifferenceSolver(static_kernel_kind=static_kernel_kind, scale=1e0)
 
   @partial(jax.jit, static_argnums=(0,))
   def kernel_matrix(self, X: jnp.ndarray, Y: jnp.ndarray, directions: jnp.ndarray = jnp.array([])) -> jnp.ndarray:
@@ -40,4 +39,5 @@ class SigKernel:
       if directions.shape != (0,):
         add_time_fn_vmap = jax.vmap(lambda Z: add_time_fn(Z, t_min=self.s0, t_max=self.S), in_axes=0, out_axes=0)
         directions = add_time_fn_vmap(directions)
-    return self.pde_solver.solve(X, Y, directions)
+
+    return jnp.mean(jax.vmap(lambda s: self.pde_solver.solve(s * X, Y, s * directions), in_axes=0, out_axes=0)(self.scales), axis=0)
