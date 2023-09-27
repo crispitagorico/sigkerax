@@ -40,4 +40,10 @@ class SigKernel:
         add_time_fn_vmap = jax.vmap(lambda Z: add_time_fn(Z, t_min=self.s0, t_max=self.S), in_axes=0, out_axes=0)
         directions = add_time_fn_vmap(directions)
 
-    return jnp.mean(jax.vmap(lambda s: self.pde_solver.solve(s * X, Y, s * directions), in_axes=0, out_axes=0)(self.scales), axis=0)
+    def body_fun(i, accum):
+      s = self.scales[i]
+      result = self.pde_solver.solve(s * X, Y, s * directions)
+      return accum + result
+    initial_value = self.pde_solver.solve(self.scales[0] * X, Y, self.scales[0] * directions)
+    return jax.lax.fori_loop(1, len(self.scales), body_fun, initial_value) / len(self.scales)
+    # return jnp.mean(jax.vmap(lambda s: self.pde_solver.solve(s * X, Y, s * directions), in_axes=0, out_axes=0)(self.scales), axis=0)
