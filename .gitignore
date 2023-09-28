@@ -9,3 +9,5 @@
 /dist/sigkerax-0.1.3.tar.gz
 /dist/sigkerax-0.1.3-py3-none-any.whl
 !/.pytest_cache/
+/dist/sigkerax-0.1.4.tar.gz
+/dist/sigkerax-0.1.4-py3-none-any.whl
