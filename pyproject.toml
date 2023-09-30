@@ -25,5 +25,5 @@ python = "^3.8"
 jax = "^0.4.11"
 
 [build-system]
-requires = ["poetry-core", "iisignature", "numpy"]
+requires = ["poetry-core", "numpy", "iisignature"]
 build-backend = "poetry.core.masonry.api"
