@@ -2,7 +2,7 @@ import jax
 import jax.numpy as jnp
 import random
 from functools import partial
-import iisignature
+import signax
 
 
 @partial(jax.jit, static_argnums=(1, 2, 3, 4))
@@ -32,7 +32,7 @@ def I0(x_squared, num_terms, dtype):
   return 1.0 + jnp.sum(
     jnp.array([(1.0 / (factorials[k - 1] ** 2)) * ((x_squared / 4.0) ** k) for k in jnp.arange(1, num_terms)]), axis=0)
 
-def iisig_gram(X, Y, width=10):
-    sigs_X = iisignature.sig(X, width)
-    sigs_Y = iisignature.sig(Y, width)
+def signax_gram(X, Y, width=10):
+    sigs_X = signax.signature(X, width)
+    sigs_Y = signax.signature(Y, width)
     return 1. + jnp.einsum("xa,ya -> xy", sigs_X, sigs_Y)

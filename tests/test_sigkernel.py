@@ -1,7 +1,7 @@
 import jax
 import jax.numpy as jnp
 from sigkerax.sigkernel import SigKernel
-from sigkerax.utils import getkey, I0, iisig_gram
+from sigkerax.utils import getkey, I0, signax_gram
 
 jax.config.update("jax_enable_x64", True)
 
@@ -44,6 +44,6 @@ class TestSigKernel:
     X = 1e-1 * jax.random.normal(getkey(), shape=(self.batch_X, self.length_X, self.dim), dtype=self.dtype).cumsum(axis=1)
     Y = 1e-1 * jax.random.normal(getkey(), shape=(self.batch_Y, self.length_Y, self.dim), dtype=self.dtype).cumsum(axis=1)
     k_mat = self.signature_kernel.kernel_matrix(X, Y)
-    iisig_matrix = iisig_gram(X, Y, width=12)
+    iisig_matrix = signax_gram(X, Y, width=12)
     print(jnp.mean((iisig_matrix - k_mat[..., 0])**2))
     assert jnp.mean((iisig_matrix - k_mat[..., 0])**2) < 1e-9
