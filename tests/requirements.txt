@@ -1,3 +1,4 @@
 pytest
 jaxlib
+numpy
 iisignature
