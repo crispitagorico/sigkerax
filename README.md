@@ -24,12 +24,12 @@ Lineax can solve a least squares problem with an explicit matrix operator:
 import jax
 from sigkerax.sigkernel import SigKernel
 key1, key2, key3 = jax.random.split(jax.random.PRNGKey(0), num=3)
-batch_dim1, batch_dim2, length1, length2, channels = 20, 50, 100, 200, 10
-first_batch_paths = jax.random.normal(key1, shape=(batch_dim1, length1, channels)).cumsum(axis=1)
-second_batch_paths = jax.random.normal(key2, shape=(batch_dim2, length2, channels)).cumsum(axis=1)
+batch_X, batch_Y, length_X, length_Y, channels = 20, 50, 100, 200, 10
+X = 1e-1 * jax.random.normal(key1, shape=(batch_X, length_X, channels)).cumsum(axis=1)
+Y = 1e-1 * jax.random.normal(key2, shape=(batch_Y, length_Y, channels)).cumsum(axis=1)
 scales = jax.random.exponential(key3, shape=(10,))
-signature_kernel = SigKernel(ds=1e-3, dt=1e-3, static_kernel_kind="linear", scales=scales, add_time=False)
-signature_kernel_matrix = signature_kernel.kernel_matrix(first_batch_paths, second_batch_paths)
+signature_kernel = SigKernel(refinement_factor=2, static_kernel_kind="linear", scales=scales, add_time=False)
+signature_kernel_matrix = signature_kernel.kernel_matrix(X, Y)
 ```
 
 ## Other signature libraries in JAX
