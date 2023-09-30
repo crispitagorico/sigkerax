@@ -2,15 +2,15 @@ import random
 import jax
 import jax.numpy as jnp
 from sigkerax.sigkernel import SigKernel
-from sigkerax.utils import getkey, I0
+from sigkerax.utils import getkey
 
 jax.config.update("jax_enable_x64", True)
 
 
 class TestSigKernelDerivatives:
-  tol = 1e-5
+  tol = 1e-8
   dtype = jnp.float64
-  signature_kernel = SigKernel(ds=1e-3, dt=1e-3)
+  signature_kernel = SigKernel(refinement_factor=10)
   batch_X, batch_Y, length_X, length_Y, dim = 10, 5, 15, 20, 3
 
   def test_derivatives_along_zero_direction(self):

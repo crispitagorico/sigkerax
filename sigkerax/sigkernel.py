@@ -7,7 +7,7 @@ from .utils import interpolate_fn, add_time_fn
 
 class SigKernel:
   def __init__(self, static_kernel_kind: str = 'linear', scales: jnp.ndarray = jnp.array([1e0]),
-               s0: float = 0., t0: float = 0., S: float = 1., T: float = 1., ds: float = 1e-1, dt: float = 1e-1,
+               s0: float = 0., t0: float = 0., S: float = 1., T: float = 1., refinement_factor: float = 1.,
                add_time: bool = False, interpolation: str = "linear"):
     if static_kernel_kind not in ["linear", "rbf"]:
       raise ValueError("Only linear and rbf static_kernels are implemented for now.")
@@ -15,8 +15,7 @@ class SigKernel:
     self.t0 = t0
     self.S = S
     self.T = T
-    self.ds = ds
-    self.dt = dt
+    self.refinement_factor = refinement_factor
     self.add_time = add_time
     self.interpolation = interpolation
     self.scales = scales
@@ -26,10 +25,12 @@ class SigKernel:
   def kernel_matrix(self, X: jnp.ndarray, Y: jnp.ndarray, directions: jnp.ndarray = jnp.array([])) -> jnp.ndarray:
 
     # interpolate on new grid
-    X = interpolate_fn(X, t_min=self.s0, t_max=self.S, step=self.ds, kind=self.interpolation)
-    Y = interpolate_fn(Y, t_min=self.t0, t_max=self.T, step=self.dt, kind=self.interpolation)
+    X = interpolate_fn(X, t_min=self.s0, t_max=self.S, refinement_factor=self.refinement_factor, kind=self.interpolation)
+    Y = interpolate_fn(Y, t_min=self.t0, t_max=self.T, refinement_factor=self.refinement_factor, kind=self.interpolation)
     if directions.shape != (0,):
-      interpolate_fn_vmap = jax.vmap(lambda Z: interpolate_fn(Z, t_min=self.s0, t_max=self.S, step=self.ds, kind=self.interpolation), in_axes=0, out_axes=0)
+      interpolate_fn_vmap = jax.vmap(lambda Z: interpolate_fn(Z, t_min=self.s0, t_max=self.S,
+                                                              refinement_factor=self.refinement_factor,
+                                                              kind=self.interpolation), in_axes=0, out_axes=0)
       directions = interpolate_fn_vmap(directions)
 
     # add time channel (optionally)
