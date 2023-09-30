@@ -1,4 +1,3 @@
-import random
 import jax
 import jax.numpy as jnp
 from sigkerax.sigkernel import SigKernel
