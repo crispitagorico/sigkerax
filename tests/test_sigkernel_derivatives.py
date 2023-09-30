@@ -9,7 +9,7 @@ jax.config.update("jax_enable_x64", True)
 
 class TestSigKernelDerivatives:
   dtype = jnp.float64
-  signature_kernel = SigKernel(refinement_factor=10)
+  signature_kernel = SigKernel(refinement_factor=5)
   batch_X, batch_Y, length_X, length_Y, dim = 10, 5, 15, 20, 3
 
   def test_derivatives_along_zero_direction(self):
