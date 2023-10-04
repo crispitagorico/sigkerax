@@ -115,7 +115,8 @@ class FiniteDifferenceSolver:
       k10 = diag_solution_minus1[i, j, k]
       inc = diag_data_minus2[i, j, k - 1] - diag_data_minus1[i, j, k - 1] - diag_data_minus1[i, j, k] + diag_data[i, j, k]
       inc2 = jnp.matmul(inc, inc)
-      update = jnp.matmul(id_mat + 0.5 * inc + (1./12.) * inc2, k01 + k10) - jnp.matmul(id_mat - (1./12.) * inc2, k00)
+      # update = jnp.matmul(id_mat + 0.5 * inc, k01 + k10) - jnp.matmul(id_mat, k00)
+      update = jnp.matmul(id_mat + 0.5 * inc + (1. / 12.) * inc2, k01 + k10) - jnp.matmul(id_mat - (1. / 12.) * inc2, k00)
       return jnp.where(k != -1, jnp.where((k == 0) | (p - k == 0), ic, update), zeros)
 
     return jax.vmap(
