@@ -44,9 +44,9 @@ class TestSigKernelDerivatives:
     assert jnp.allclose(k_mat, k_mat_pad, atol=1e-8)
 
   def test_derivatives_perturbative(self, eps=1e-6):
-    X = 5e-1 * jax.random.normal(getkey(), shape=(self.batch_X, self.length_X, self.dim), dtype=self.dtype).cumsum(axis=1)
-    Y = 5e-1 * jax.random.normal(getkey(), shape=(self.batch_Y, self.length_Y, self.dim), dtype=self.dtype).cumsum(axis=1)
-    directions = 5e-1 * jax.random.normal(getkey(), shape=(2, self.batch_X, self.length_X, self.dim), dtype=self.dtype).cumsum(axis=2)
+    X = 1e-1 * jax.random.normal(getkey(), shape=(self.batch_X, self.length_X, self.dim), dtype=self.dtype).cumsum(axis=1)
+    Y = 1e-1 * jax.random.normal(getkey(), shape=(self.batch_Y, self.length_Y, self.dim), dtype=self.dtype).cumsum(axis=1)
+    directions = 1e-1 * jax.random.normal(getkey(), shape=(2, self.batch_X, self.length_X, self.dim), dtype=self.dtype).cumsum(axis=2)
     k_mats = self.signature_kernel.kernel_matrix(X, Y, directions)
     k_diff, k2_diff = k_mats[..., 1], k_mats[..., 2]
     k_eps = (1. / eps) * (self.signature_kernel.kernel_matrix(X + eps * directions[0], Y)
@@ -56,4 +56,4 @@ class TestSigKernelDerivatives:
                               - self.signature_kernel.kernel_matrix(X + eps * directions[1], Y)
                               + self.signature_kernel.kernel_matrix(X, Y))[..., 0]
     # print(jnp.mean(k_diff), jnp.mean(k_eps), jnp.mean(k2_diff), jnp.mean(k2_eps))
-    assert jnp.allclose(k_diff, k_eps, atol=1e-4) #& jnp.allclose(k2_diff, k2_eps, atol=1e-3)
+    assert jnp.allclose(k_diff, k_eps, atol=1e-6) #& jnp.allclose(k2_diff, k2_eps, atol=1e-3)
