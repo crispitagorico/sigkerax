@@ -43,7 +43,7 @@ class SigKernel:
 
     def body_fun(i, accum):
       s = self.scales[i]
-      result = self.pde_solver.solve(s * X, Y, s * directions)
+      result = self.pde_solver.solve(s * X, s * Y, s * directions)
       return accum + result
     initial_value = self.pde_solver.solve(self.scales[0] * X, Y, self.scales[0] * directions)
     return jax.lax.fori_loop(1, len(self.scales), body_fun, initial_value) / len(self.scales)
