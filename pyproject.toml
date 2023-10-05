@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sigkerax"
-version = "0.1.7"
+version = "0.1.9"
 description = "Signature kernel computations via PDE solvers in JAX"
 authors = ["Cristopher Salvi <crispitagorico@gmail.com>"]
 readme = "README.md"

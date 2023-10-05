@@ -15,11 +15,11 @@ class SigKernel:
     self.t0 = t0
     self.S = S
     self.T = T
+    self.static_kernel_kind = static_kernel_kind
     self.refinement_factor = refinement_factor
     self.add_time = add_time
     self.interpolation = interpolation
     self.scales = scales
-    self.pde_solver = FiniteDifferenceSolver(static_kernel_kind=static_kernel_kind, scale=1e0)
 
   @partial(jax.jit, static_argnums=(0,))
   def kernel_matrix(self, X: jnp.ndarray, Y: jnp.ndarray, directions: jnp.ndarray = jnp.array([])) -> jnp.ndarray:
@@ -41,10 +41,11 @@ class SigKernel:
         add_time_fn_vmap = jax.vmap(lambda Z: add_time_fn(Z, t_min=self.s0, t_max=self.S), in_axes=0, out_axes=0)
         directions = add_time_fn_vmap(directions)
 
-    def body_fun(i, accum):
-      s = self.scales[i]
-      result = self.pde_solver.solve(s * X, s * Y, s * directions)
-      return accum + result
-    initial_value = self.pde_solver.solve(self.scales[0] * X, Y, self.scales[0] * directions)
-    return jax.lax.fori_loop(1, len(self.scales), body_fun, initial_value) / len(self.scales)
-    # return jnp.mean(jax.vmap(lambda s: self.pde_solver.solve(s * X, Y, s * directions), in_axes=0, out_axes=0)(self.scales), axis=0)
+    # def body_fun(i, accum):
+    #   s = self.scales[i]
+    #   result = self.pde_solver.solve(s * X, Y, s * directions)
+    #   return accum + result
+    # initial_value = self.pde_solver.solve(self.scales[0] * X, Y, self.scales[0] * directions)
+    # return jax.lax.fori_loop(1, len(self.scales), body_fun, initial_value) / len(self.scales)
+    return jnp.mean(jax.vmap(lambda s: FiniteDifferenceSolver(static_kernel_kind=self.static_kernel_kind, scale=s).solve(X, Y, directions), in_axes=0, out_axes=0)(self.scales), axis=0)
+
