@@ -20,16 +20,13 @@ class TestSigKernelDerivatives:
     assert jnp.all(jnp.isclose(k_mat[..., 1:], 0.0, atol=1e-8))
 
   def test_derivatives_along_constant_direction(self):
-    """Derivatives along the zero path is always equal to 0"""
+    """Derivatives along the constant path is zero"""
     X = 1e-1 * jax.random.normal(getkey(), shape=(self.batch_X, self.length_X, self.dim), dtype=self.dtype).cumsum(axis=1)
     Y = 1e-1 * jax.random.normal(getkey(), shape=(self.batch_Y, self.length_Y, self.dim), dtype=self.dtype).cumsum(axis=1)
-    directions1 = 1e-1 * jax.random.normal(getkey(), shape=(2, self.batch_X, self.dim), dtype=self.dtype)
-    directions1 = jnp.tile(directions1[:, :, jnp.newaxis, :], (1, 1, self.length_X, 1))
-    directions2 = 1e-1 * jax.random.normal(getkey(), shape=(2, self.batch_X, self.dim), dtype=self.dtype)
-    directions2 = jnp.tile(directions2[:, :, jnp.newaxis, :], (1, 1, self.length_X, 1))
-    k_mat1 = self.signature_kernel.kernel_matrix(X, Y, directions1)
-    k_mat2 = self.signature_kernel.kernel_matrix(X, Y, directions2)
-    assert jnp.all(jnp.isclose(k_mat1[..., 1:], k_mat2[..., 1:], atol=1e-8))
+    directions = 1e-1 * jax.random.normal(getkey(), shape=(2, self.batch_X, self.dim), dtype=self.dtype)
+    directions = jnp.tile(directions[:, :, jnp.newaxis, :], (1, 1, self.length_X, 1))
+    k_mat = self.signature_kernel.kernel_matrix(X, Y, directions)
+    assert jnp.all(jnp.isclose(k_mat[..., 1:], 0.0, atol=1e-8))
 
   def test_derivative_padded_direction(self):
     """Padding with lastly observed value doesn't change the derivative."""
@@ -51,9 +48,9 @@ class TestSigKernelDerivatives:
     k_diff, k2_diff = k_mats[..., 1], k_mats[..., 2]
     k_eps = (1. / eps) * (self.signature_kernel.kernel_matrix(X + eps * directions[0], Y)
                           - self.signature_kernel.kernel_matrix(X, Y))[..., 0]
-    k2_eps = (1. / eps**2) * (self.signature_kernel.kernel_matrix(X + eps * (directions[0] + directions[1]), Y)
-                              - self.signature_kernel.kernel_matrix(X + eps * directions[0], Y)
-                              - self.signature_kernel.kernel_matrix(X + eps * directions[1], Y)
-                              + self.signature_kernel.kernel_matrix(X, Y))[..., 0]
+    # k2_eps = (1. / eps**2) * (self.signature_kernel.kernel_matrix(X + eps * (directions[0] + directions[1]), Y)
+    #                           - self.signature_kernel.kernel_matrix(X + eps * directions[0], Y)
+    #                           - self.signature_kernel.kernel_matrix(X + eps * directions[1], Y)
+    #                           + self.signature_kernel.kernel_matrix(X, Y))[..., 0]
     # print(jnp.mean(k_diff), jnp.mean(k_eps), jnp.mean(k2_diff), jnp.mean(k2_eps))
     assert jnp.allclose(k_diff, k_eps, atol=1e-6) #& jnp.allclose(k2_diff, k2_eps, atol=1e-3)

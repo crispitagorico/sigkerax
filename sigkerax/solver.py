@@ -24,7 +24,7 @@ class FiniteDifferenceSolver:
     return jnp.where((diag_axis >= start_row) & (diag_axis < end_row), diag_axis, -1)
 
   @staticmethod
-  def _initial_condition(state_space_dim: int, dtype: type):
+  def _initial_condition(state_space_dim: int, dtype: type) -> jnp.ndarray:
     ic = jnp.zeros(shape=state_space_dim, dtype=dtype)
     return ic.at[0].set(1.0)
 
